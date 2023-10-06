@@ -1,2 +1,5 @@
 p+q+r:s
 p*q:r
+p
+p:q
+p+q:r
