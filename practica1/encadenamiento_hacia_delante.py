@@ -1,8 +1,26 @@
 import re
 
+
+'''
+1: caso
+-reglas CH (completo)
+-hechos CH (completo)
+BASES: BC_3.txt
+2: caso (puede ser incompleto)
+-reglas noCH
+-hecho CH
+BASES: BC_1.txt (es incompleta), BC_2.txt (es incompleta)
+3: caso (puede ser incompleto)
+-reglas noCH
+-hecho noCH
+BASES: BC_4.txt (es completa)
+'''
+
+
 base_conocimiento = {}
 reglas = []
 proposiciones = []
+hechos = []
 
 class rule:
     def __init__(self, clausulas, consecuente):
@@ -28,7 +46,7 @@ class rule:
 
 def main():
     print("Encadenamiento hacia delante")
-    fichero = reader("BC_2.txt")
+    fichero = reader("BC_1.txt")
     # Se recorre todas las filas del fichero
     for fila in fichero.get_data():
         # Busqueda de reglas y hechos
@@ -40,6 +58,7 @@ def main():
             reglas.append(rule(clausulas, consecuente))
         else:
             base_conocimiento.update({fila:True})
+            hechos.append(fila)
 
         for char in fila:
             if (re.search("[a-z]", char) and (not char in proposiciones)):
@@ -61,8 +80,10 @@ def main():
     # Comprobacion de completitud
     valores_proposiciones_bool = [[] for i in range(len(proposiciones))]
     lista_reglas = []
+    lista_consecuentes = []
     for regla in reglas:
         lista_reglas.append(regla.clausulas)
+        lista_consecuentes.append(regla.consecuente)
 
     BC_tabla_verdad_bool = []
 
@@ -75,6 +96,8 @@ def main():
 
         for regla in lista_reglas:
             valor_regla = True
+            indice_regla = lista_reglas.index(regla)
+            
             for condicion in regla:
                 valor_condicion = True
 
@@ -92,9 +115,17 @@ def main():
                         indice = proposiciones.index(elem)
                         valor_condicion = valor_condicion or valores_proposiciones_bool[indice][i]
 
+                #print(str(valor_condicion) + " " + str(condicion))
+                
+                #print(str(valor_condicion) + " " + proposiciones[indice_consecuente] + " " 
+                      #+ str(valores_proposiciones_bool[indice_consecuente][i]) + " " + str(i))
+
+
                 #El valor de la regla es el and entre todas sus condiciones
                 valor_regla = valor_regla and valor_condicion
-            
+
+            indice_consecuente = proposiciones.index(lista_consecuentes[indice_regla])
+            valor_regla = (not valor_regla) or valores_proposiciones_bool[indice_consecuente][i]
             # El valor de la tabla es el and entre todas las reglas
             valor_tabla = valor_tabla and valor_regla
 
@@ -113,6 +144,8 @@ def main():
                 BC_tabla_verdad.remove(proposiciones[i])
                 break
 
+    print(BC_tabla_verdad_bool)
+    #print(valores_proposiciones_bool)
     print(BC_tabla_verdad)
 
     # Asumimos de primeras que la base de conocimiento es completa
