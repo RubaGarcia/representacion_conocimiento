@@ -46,7 +46,7 @@ class rule:
 
 def main():
     print("Encadenamiento hacia delante")
-    fichero = reader("BC_1.txt")
+    fichero = reader("BC_3.txt")
     # Se recorre todas las filas del fichero
     for fila in fichero.get_data():
         # Busqueda de reglas y hechos
@@ -77,6 +77,51 @@ def main():
     print(base_completa)
     print(proposiciones)
 
+    valores_proposiciones_bool = [[] for i in range(len(proposiciones))]
+    for i in range(2 ** len(proposiciones)):
+        for j in range(len(proposiciones)):
+            valores_proposiciones_bool[j].append(bool(i & (2 ** j)))
+    
+    def obtener_valor(elem):
+        if re.search("^.{1}$", elem):
+            return valores_proposiciones_bool[proposiciones.index(elem)]
+        else:
+            lista_or = elem.split("+")
+            valor = False
+            lista_valores = []
+            for elem in lista_or:
+                lista_valores.append(obtener_valor(elem))
+
+            lista_retorno = lista_valores[0]
+            
+            for i in range(len(lista_retorno)):
+                for lista in lista_valores[1:]:
+                    lista_retorno[i] = lista_retorno[i] or lista[i]
+            return lista_retorno
+
+    valores_tablas_elementos = []
+    for elem in hechos:
+        valores_tablas_elementos.append(obtener_valor(elem))
+
+    for regla in reglas:
+        lista_valores_clausulas = []
+        valores_consecuente = obtener_valor(regla.consecuente)
+        for clausula in regla.clausulas:
+            lista_valores_clausulas.append(obtener_valor(clausula))
+
+        for i in range(len(valores_consecuente)):
+            valor_clausulas = True
+            for lista in lista_valores_clausulas:
+                valor_clausulas = valor_clausulas and lista[i]
+
+            #TODO: PROBLEMA AQUI
+            valores_consecuente[i] = (not valor_clausulas) or valores_consecuente[i]
+
+        valores_tablas_elementos.append(valores_consecuente)
+
+        
+
+    '''
     # Comprobacion de completitud
     valores_proposiciones_bool = [[] for i in range(len(proposiciones))]
     lista_reglas = []
@@ -147,6 +192,7 @@ def main():
     print(BC_tabla_verdad_bool)
     #print(valores_proposiciones_bool)
     print(BC_tabla_verdad)
+    
 
     # Asumimos de primeras que la base de conocimiento es completa
     completa = True
@@ -161,6 +207,9 @@ def main():
         print("La base de conocimiento es completa")
     else:
         print("La base de conocimiento no es completa")
+        '''
+
+    
     
 
 # *:r --> regla; lista(*) = lista proposiciones; r = conclusion
