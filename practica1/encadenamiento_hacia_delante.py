@@ -62,12 +62,11 @@ def main():
         for regla in reglas:
             loop = loop or regla.disparar()
 
-    print(fichero.get_data())
     base_completa = []
     for elem in base_conocimiento.keys():
         base_completa.append(elem)
-    print(base_completa)
-    print(proposiciones)
+
+    print("BC encadenamiento hacia delante: ", base_completa)
 
     valores_proposiciones_bool = [[] for i in range(len(proposiciones))]
     for i in range(2 ** len(proposiciones)):
@@ -79,7 +78,6 @@ def main():
             return valores_proposiciones_bool[proposiciones.index(elem)].copy()
         else:
             lista_or = elem.split("+")
-            valor = False
             lista_valores = []
             for elem in lista_or:
                 lista_valores.append(obtener_valor(elem))
@@ -117,22 +115,13 @@ def main():
 
         valores_tablas_elementos.append(valores_consecuente)
 
-    for each in valores_tablas_elementos:
-        print(each)
-
-    for i in range(len(proposiciones)):
-        print(proposiciones[i] + ": " + str(valores_proposiciones_bool[i]))
-
     BC_tabla_verdad_bool = []
-
     #Obtener la tabla de verdad de la base de conocimiento
     for i in range(len(valores_proposiciones_bool[0])):
         valor_tabla = True
         for elem in valores_tablas_elementos:
             valor_tabla = valor_tabla and elem[i]
         BC_tabla_verdad_bool.append(valor_tabla)
-
-    print(BC_tabla_verdad_bool)
 
     BC_tabla_verdad = proposiciones.copy()
 
@@ -145,7 +134,7 @@ def main():
                 BC_tabla_verdad.remove(proposiciones[i])
                 break
 
-    print(BC_tabla_verdad)
+    print("BC tabla de verdad:              ", BC_tabla_verdad)
 
     # Comprobar que todos los elementos de la tabla de verdad estan en
     # la base de conocimiento que hemos obtenido por el encadenamiento hacia delante
@@ -169,12 +158,6 @@ def main():
 # p*q --> p and q
 # p+q --> p or q (se utiliza como una unica proposicion, tiene que existir literalmente, anhade 
 # incertidumbre a la completud del encadenamiento)
-
-
-
-#def contiene(key):
-    #return (hechos.get(key) not None)
-
 
 class reader:
     def __init__(self, file):
