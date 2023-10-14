@@ -9,11 +9,11 @@ BASES: BC_3.txt
 2: caso (puede ser incompleto)
 -reglas noCH
 -hecho CH
-BASES: BC_1.txt (es incompleta), BC_2.txt (es incompleta)
+BASES: BC_1.txt (es incompleta), BC_2.txt (es incompleta), BC_5.txt (es completa)
 3: caso (puede ser incompleto)
 -reglas noCH
 -hecho noCH
-BASES: BC_4.txt (es completa)
+BASES: BC_4.txt (es completa), BC_6.txt (es incompleta)
 '''
 
 
@@ -26,14 +26,6 @@ class rule:
     def __init__(self, clausulas, consecuente):
         self.clausulas = clausulas
         self.consecuente = consecuente
-        self.horn = self.isHorn()
-             
-    def isHorn(self):
-        pattern = r'^.*\+.*$'
-        for clausula in self.clausulas:
-            if bool(re.match(pattern, clausula)):
-                return False
-        return True
 
     def disparar(self):
         if self.consecuente in base_conocimiento:
@@ -46,7 +38,7 @@ class rule:
 
 def main():
     print("Encadenamiento hacia delante")
-    fichero = reader("BC_3.txt")
+    fichero = reader("BC_6.txt")
     # Se recorre todas las filas del fichero
     for fila in fichero.get_data():
         # Busqueda de reglas y hechos
@@ -84,7 +76,7 @@ def main():
     
     def obtener_valor(elem):
         if re.search("^.{1}$", elem):
-            return valores_proposiciones_bool[proposiciones.index(elem)]
+            return valores_proposiciones_bool[proposiciones.index(elem)].copy()
         else:
             lista_or = elem.split("+")
             valor = False
@@ -99,85 +91,49 @@ def main():
                     lista_retorno[i] = lista_retorno[i] or lista[i]
             return lista_retorno
 
+    #Lista que contendra los valores booleanos de todos los elementos de la base de conocimiento
     valores_tablas_elementos = []
+    #Obtener los valores de verdad de los hechos y añadirlos a la lista
     for elem in hechos:
         valores_tablas_elementos.append(obtener_valor(elem))
 
+    #Obtener los valores de verdad de las reglas y añadirlos a la lista
     for regla in reglas:
+        #Lista que contendra los valores booleanos de todas las clausulas de la regla (parte izquierda)
         lista_valores_clausulas = []
+        #Valores booleanos del consecuente (parte derecha)
         valores_consecuente = obtener_valor(regla.consecuente)
+        #Obtener los valores booleanos de las clausulas y añadirlos a la lista
         for clausula in regla.clausulas:
             lista_valores_clausulas.append(obtener_valor(clausula))
 
+        #Obtener la tabla de verdad de la regla
         for i in range(len(valores_consecuente)):
             valor_clausulas = True
             for lista in lista_valores_clausulas:
                 valor_clausulas = valor_clausulas and lista[i]
 
-            #TODO: PROBLEMA AQUI
             valores_consecuente[i] = (not valor_clausulas) or valores_consecuente[i]
 
         valores_tablas_elementos.append(valores_consecuente)
 
-        
+    for each in valores_tablas_elementos:
+        print(each)
 
-    '''
-    # Comprobacion de completitud
-    valores_proposiciones_bool = [[] for i in range(len(proposiciones))]
-    lista_reglas = []
-    lista_consecuentes = []
-    for regla in reglas:
-        lista_reglas.append(regla.clausulas)
-        lista_consecuentes.append(regla.consecuente)
+    for i in range(len(proposiciones)):
+        print(proposiciones[i] + ": " + str(valores_proposiciones_bool[i]))
 
     BC_tabla_verdad_bool = []
 
-    # Inicio de la comprobacion por tabla de verdad
-    for i in range(2 ** len(proposiciones)):
-        for j in range(len(proposiciones)):
-            valores_proposiciones_bool[j].append(bool(i & (2 ** j)))
-        
+    #Obtener la tabla de verdad de la base de conocimiento
+    for i in range(len(valores_proposiciones_bool[0])):
         valor_tabla = True
-
-        for regla in lista_reglas:
-            valor_regla = True
-            indice_regla = lista_reglas.index(regla)
-            
-            for condicion in regla:
-                valor_condicion = True
-
-                if (re.search("^.{1}$", condicion)):
-                    # Si el elemento es solo una letra, tomar su valor
-                    indice = proposiciones.index(condicion)
-                    valor_condicion = valores_proposiciones_bool[indice][i]
-                else:
-                    # Si el elemento no es solo una letra, es un or entre distintas proposiciones
-                    lista_or = condicion.split("+")
-                    
-                    # Dividir la lista de or en sus elementos y e ir acumulando su valor
-                    valor_condicion = False
-                    for elem in lista_or:
-                        indice = proposiciones.index(elem)
-                        valor_condicion = valor_condicion or valores_proposiciones_bool[indice][i]
-
-                #print(str(valor_condicion) + " " + str(condicion))
-                
-                #print(str(valor_condicion) + " " + proposiciones[indice_consecuente] + " " 
-                      #+ str(valores_proposiciones_bool[indice_consecuente][i]) + " " + str(i))
-
-
-                #El valor de la regla es el and entre todas sus condiciones
-                valor_regla = valor_regla and valor_condicion
-
-            indice_consecuente = proposiciones.index(lista_consecuentes[indice_regla])
-            valor_regla = (not valor_regla) or valores_proposiciones_bool[indice_consecuente][i]
-            # El valor de la tabla es el and entre todas las reglas
-            valor_tabla = valor_tabla and valor_regla
-
-        # Se añade el valor de la tabla a la lista de valores de la base de conocimiento
+        for elem in valores_tablas_elementos:
+            valor_tabla = valor_tabla and elem[i]
         BC_tabla_verdad_bool.append(valor_tabla)
-    
-    # Se asumen que todas las proposiciones estan en la base de conocimiento
+
+    print(BC_tabla_verdad_bool)
+
     BC_tabla_verdad = proposiciones.copy()
 
     # Comprobar cuales de las proposiciones estan en la base de conocimiento
@@ -189,35 +145,30 @@ def main():
                 BC_tabla_verdad.remove(proposiciones[i])
                 break
 
-    print(BC_tabla_verdad_bool)
-    #print(valores_proposiciones_bool)
     print(BC_tabla_verdad)
-    
 
-    # Asumimos de primeras que la base de conocimiento es completa
+    # Comprobar que todos los elementos de la tabla de verdad estan en
+    # la base de conocimiento que hemos obtenido por el encadenamiento hacia delante
     completa = True
-    # Comprobar que todos los elementos de la tabla de verdad estan en la base de conocimiento que hemos obtenido
-    # por el encadenamiento hacia delante
     for elem in BC_tabla_verdad:
         if not elem in base_completa:
             completa = False
             break
-        
+
     if completa:
         print("La base de conocimiento es completa")
     else:
         print("La base de conocimiento no es completa")
-        '''
 
-    
-    
+
+
+
 
 # *:r --> regla; lista(*) = lista proposiciones; r = conclusion
 # r --> hecho
 # p*q --> p and q
 # p+q --> p or q (se utiliza como una unica proposicion, tiene que existir literalmente, anhade 
 # incertidumbre a la completud del encadenamiento)
-# () --> todo entre parentesis se comporta como una "clausula"
 
 
 
