@@ -66,7 +66,7 @@ def main():
     for elem in base_conocimiento.keys():
         base_completa.append(elem)
 
-    print("BC encadenamiento hacia delante: ", base_completa)
+    print("BC encadenamiento hacia delante:\t", base_completa)
 
     valores_proposiciones_bool = [[] for i in range(len(proposiciones))]
     for i in range(2 ** len(proposiciones)):
@@ -134,7 +134,7 @@ def main():
                 BC_tabla_verdad.remove(proposiciones[i])
                 break
 
-    print("BC tabla de verdad:              ", BC_tabla_verdad)
+    print("BC tabla de verdad:\t\t\t", BC_tabla_verdad)
 
     # Comprobar que todos los elementos de la tabla de verdad estan en
     # la base de conocimiento que hemos obtenido por el encadenamiento hacia delante
