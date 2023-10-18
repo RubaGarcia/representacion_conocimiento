@@ -39,7 +39,7 @@ class rule:
 def main():
     print("Encadenamiento hacia delante")
     fichero = reader("BC_6.txt")
-    # Se recorre todas las filas del fichero
+    # Se recorre todas las filas del fichero para leerlo
     for fila in fichero.get_data():
         # Busqueda de reglas y hechos
         if (re.search("^.*:.$",fila)):
@@ -56,6 +56,7 @@ def main():
             if (re.search("[a-z]", char) and (not char in proposiciones)):
                 proposiciones.append(char)
     
+
     loop = True
     while loop:
         loop = False
