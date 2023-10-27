@@ -19,7 +19,7 @@ class reader:
 def main():
     grafo = nx.DiGraph()
 
-    data = reader("grafo2.txt").get_data()
+    data = reader("myfile.txt").get_data()
 
     #numero de nodos
     nNodos = int(data[0])
