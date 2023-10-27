@@ -19,7 +19,7 @@ class reader:
 def main():
     grafo = nx.DiGraph()
 
-    data = reader("grafo1.txt").get_data()
+    data = reader("grafo2.txt").get_data()
 
     #numero de nodos
     nNodos = int(data[0])
@@ -57,6 +57,19 @@ def main():
     nuevo_grafo = union_padres(grafo)
 
     print_graph(nuevo_grafo)
+
+    #se elimina los nodos observados
+    nuevo_grafo.remove_nodes_from(lista_observados)
+
+    #busqueda en grafos para conprobar su independencia
+    dependencia = explorar(nuevo_grafo, nodo1, nodo2)
+
+    if dependencia:
+        print("El nodo " + str(nodo1) + " y el nodo " + str(nodo2) + " no son independientes")
+    else:
+        print("El nodo " + str(nodo1) + " y el nodo " + str(nodo2) + " son independientes")
+  
+    
 
 def eliminacion_hojas(grafo, lista_no_eliminables):
     print("Eliminacion de los vertices hoja")
@@ -97,8 +110,26 @@ def union_padres(grafo):
     
     return non_dir_grafo
 
+def explorar(grafo, nodo_inicial, nodo_final):
+    #se explora en profundidad (pila)
+    busqueda = [nodo_inicial]
+    explorados = []
 
+    while busqueda:
+        nodo_exploracion = busqueda.pop(0)
+        explorados.append(nodo_exploracion)
 
+        nodos_vecinos = grafo.neighbors(nodo_exploracion)
+
+        if (nodo_final in nodos_vecinos):
+            return True
+        
+        for nodo in nodos_vecinos:
+            if nodo not in explorados:
+                busqueda.append(nodo)
+
+    return False
+    
 def print_graph(G):
     nx.draw(G)
     plt.show()
