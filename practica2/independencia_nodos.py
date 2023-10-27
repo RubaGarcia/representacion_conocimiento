@@ -133,6 +133,8 @@ def explorar(grafo, nodo_inicial, nodo_final):
 def print_graph(G):
     nx.draw(G)
     plt.show()
+    plt.pause(2)
+    plt.close()
     
 
 if __name__ == "__main__":
