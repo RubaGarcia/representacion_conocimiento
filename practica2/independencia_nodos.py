@@ -33,7 +33,7 @@ def main():
         nodos = data[fila].split(",")
         grafo.add_edge(int(nodos[0]), int(nodos[1]))
 
-    #print_graph(grafo)    
+    print_graph(grafo)    
 
     #independencia a comprobar
     independencia = data[-1].split(",")
@@ -86,10 +86,11 @@ def eliminacion_hojas(grafo, lista_no_eliminables):
         nodo = nodosHoja.pop()
         if (nodo not in lista_no_eliminables):
             padres = grafo.predecessors(nodo)
-            for padre in padres:
-                if padre not in nodosHoja:
-                    nodosHoja.append(padre)
             grafo.remove_node(nodo)
+            for padre in padres:
+                if (padre not in nodosHoja) and (len(grafo.edges(padre)) == 0):
+                    nodosHoja.append(padre)
+            
 
 def union_padres(grafo):
     
@@ -116,7 +117,7 @@ def explorar(grafo, nodo_inicial, nodo_final):
     explorados = []
 
     while busqueda:
-        nodo_exploracion = busqueda.pop(0)
+        nodo_exploracion = busqueda.pop()
         explorados.append(nodo_exploracion)
 
         nodos_vecinos = grafo.neighbors(nodo_exploracion)
@@ -131,10 +132,8 @@ def explorar(grafo, nodo_inicial, nodo_final):
     return False
     
 def print_graph(G):
-    nx.draw(G)
+    nx.draw(G, with_labels=True)
     plt.show()
-    plt.pause(2)
-    plt.close()
     
 
 if __name__ == "__main__":
