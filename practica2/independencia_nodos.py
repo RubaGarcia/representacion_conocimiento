@@ -19,7 +19,7 @@ class reader:
 def main():
     grafo = nx.DiGraph()
 
-    data = reader("grafo3.txt").get_data()
+    data = reader("grafo2.txt").get_data()
 
     #numero de nodos
     nNodos = int(data[0])
@@ -41,8 +41,9 @@ def main():
     nodo2 = int(independencia[1])
     observados = independencia[2][1:-1]
     lista_observados = []
-    for elem in observados.split("."):
-        lista_observados.append(int(elem))
+    if observados != "":
+        for elem in observados.split("."):
+            lista_observados.append(int(elem))
 
     lista_no_eliminables = lista_observados.copy()
     lista_no_eliminables.append(nodo1)
