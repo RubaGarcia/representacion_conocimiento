@@ -30,6 +30,22 @@ class factor:
     def get_valores(self):
         return self.valores
     
+    def contiene_variable(self, nombre):
+        for variable in self.variables:
+            if variable.get_nombre() == nombre:
+                return True
+        return False
+
+    def get_variable_position(self, nombre):
+        if not self.contiene_variable(nombre):
+            return -1
+
+        for i in range(len(self.variables)):
+            if self.variables[i].get_nombre() == nombre:
+                return i
+        
+        
+    
 
 '''
 clase que representa las variables
@@ -85,7 +101,7 @@ def main():
             if var.get_nombre() == nombre:
                 return var
 
-    for datum in data[1:-1]:
+    for datum in data[1:-2]:
         #print(datum)
         
         fila = datum.split(":")
@@ -104,40 +120,39 @@ def main():
             for var in variables_factor:
                 print(var.get_nombre())
 
-            tabla_valores = 0
-            
-            for index in range(len(variables_factor)-1, -1, -1):
-                tabla_valores = [tabla_valores for num in range(variables_factor[index].get_valores())]
-
+            tabla_valores = {}
 
             #print("-----")
             print()
             print(tabla_valores)
+
+        llave = ""
+        for elem in elementos:
+            llave += elem[1]
+
+        tabla_valores.update({llave:valor})
         
         
+        eliminacion = data[-2].split(",")
+        condiciones = data[-1].split(",")
 
-        
-    '''
-    #Leer el orden de eliminacion
-    lector_orden = reader("parametros.txt")
-    data_orden = lector_orden.get_data()
-    orden1 = data_orden[0].split(",")
-    if data_orden[1] is not null:
-        orden2 = data_orden[1].split(",")
-        inferencia_condicional(orden1,orden2,listafactores)
-    inferencia_margial(orden1, listafactores)
+        while eliminacion:
+            elemento_eliminable = eliminacion.pop(0).lower()
 
-    def inferencia_marginal(orden1):
-        for orden in orden1:
+            factores_reducibles = []
+            for factor in lista_factores:
+                if factor.contiene_variable(elemento_eliminable):
+                    factores_reducibles.append(factor)
 
+            variables_comunes = factores_reducibles[0].get_variables()
 
-    def inferencia_condicional(orden1, orden2):
+            for factor in factores_reducibles[1:]:
+                variables_factor = factor.get_variables()
+                for var in variables_comunes:
+                    if not var in variables_factor:
+                        variables_comunes.remove(var)
 
-    '''
-
-
-
-
+            
         #TODO 
         
 
