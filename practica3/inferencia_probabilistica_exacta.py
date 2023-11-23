@@ -1,4 +1,5 @@
 import re
+import sys
 
 class reader:
     def __init__(self, file):
@@ -65,8 +66,11 @@ class variable:
 
         
 
-def main():
-    lector = reader("base_tablas.txt")
+def main(base):
+    lectura = "base_tablas_"+ str(base) + ".txt"
+    print (lectura)
+    lector = reader(lectura)
+    #lector = reader("base_tablas_0.txt")
     lista_variables = []
     lista_factores = []
     lista_constantes = []
@@ -423,4 +427,11 @@ def main():
     
 
 if __name__ == "__main__":
-    main()
+    
+    if len(sys.argv) >= 2:
+        print(sys.argv[1])
+        main(sys.argv[1])
+    else:
+        print("no hay entrada")
+
+    
