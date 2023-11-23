@@ -1,0 +1,42 @@
+Ejecutando fichero 0 ...
+
+real	0m0,024s
+user	0m0,012s
+sys	0m0,012s
+------------------------
+Ejecutando fichero 1 ...
+
+real	0m0,019s
+user	0m0,010s
+sys	0m0,009s
+------------------------
+Ejecutando fichero 2 ...
+
+real	0m0,019s
+user	0m0,014s
+sys	0m0,005s
+------------------------
+Ejecutando fichero 3 ...
+
+real	0m0,020s
+user	0m0,012s
+sys	0m0,008s
+------------------------
+Ejecutando fichero 4 ...
+
+real	0m0,019s
+user	0m0,011s
+sys	0m0,007s
+------------------------
+Ejecutando fichero 5 ...
+
+real	0m0,020s
+user	0m0,020s
+sys	0m0,000s
+------------------------
+Ejecutando fichero 6 ...
+
+real	0m0,019s
+user	0m0,015s
+sys	0m0,004s
+------------------------
