@@ -74,9 +74,6 @@ def main():
     data = lector.get_data()
 
     variables = data[0].split(",")
-    print("--------------") 
-
-    print(variables)
 
     #guardar variables
     for var in variables:
@@ -132,17 +129,8 @@ def main():
             for elem in elementos:
                 variables_factor.append(obtener_variable(elem[0]))
 
-            # TODO: DEPURACION
-            print("-----")
-            for var in variables_factor:
-                print(var.get_nombre())
-
             # Inicializar el mapa de valores del nuevo factor
             tabla_valores = {}
-
-            # TODO: DEPURACION
-            print()
-            print(tabla_valores)
 
         # Generar la llave del nuevo valor
         llave = ""
@@ -152,9 +140,6 @@ def main():
         
     guardar_factor(tabla_valores, variables_factor)
 
-    # TODO: DEPURACION
-    print("-----")
-    print(tabla_valores)
     '''
     print("-----")
     print("lista factores")
@@ -184,7 +169,6 @@ def main():
 
     # Si hay condiciones, modificar los factores que contengan las variables condicionadas
     if condiciones[0] != "None":
-        print("Condicional")
         factores_condicionados = []
         # Comprobar por cada variable condicionada
         for var_condicionada in condiciones:
@@ -229,33 +213,21 @@ def main():
                         nueva_clave = char_remover(clave, [indice_var])
                         nuevo_mapa.update({nueva_clave:valor})
                     guardar_factor(nuevo_mapa, nuevas_variables)
-    else:
-        print("Marginal")
 
 
     while eliminacion:
         #Obtener la variable que se quiere eliminar
         elemento_eliminable = eliminacion.pop(0).lower()
 
-        # TODO: DEPURACION
-        print("-----")
-        print(elemento_eliminable)
-        print(lista_factores)
 
         #Obtener los factores que contienen la variable
         factores_reducibles = []
         for factor in lista_factores:
             if factor.contiene_variable(elemento_eliminable):
-                print("la contiene")
                 factores_reducibles.append(factor)
 
         for factor in factores_reducibles:
             lista_factores.remove(factor)
-
-        # TODO: DEPURACION
-        for factor in lista_factores:
-            if factor.contiene_variable(elemento_eliminable):
-                print("faltan_elementos")
 
         #Si no hay factores que contengan la variable, continuar
         if len(factores_reducibles) == 0:
@@ -263,19 +235,11 @@ def main():
 
         #Mientras esa lista contenga mas de un factor, combinarlos
         while len(factores_reducibles) > 1:
-            print(len(factores_reducibles))
             # Obtener los dos ultimos factores
             factor1 = factores_reducibles.pop()
             factor2 = factores_reducibles.pop()
 
             mapa_nuevo_factor = {}
-
-            # TODO: DEPURACION
-            print("===========")
-            print(factor1.get_variables())
-            print(factor1.get_valores())
-            print(factor2.get_variables())
-            print(factor2.get_valores())
 
             # Encontrar sus variables comunes
             variables_comunes = []
@@ -296,21 +260,12 @@ def main():
                 if var not in variables_comunes:
                     variables_no_comunes.append(var)
 
-            # TODO: DEPURACION
-            print("/=/=/=")
-            print(variables_comunes)
-            print(variables_no_comunes)
-
             # Generar la lista de variables del nuevo factor
             nuevo_factor_lista_variables = variables_comunes.copy()
             for var in variables_no_comunes:
                 nuevo_factor_lista_variables.append(var)
             factor1_keys = factor1.get_valores().keys()
             factor2_keys = factor2.get_valores().keys()
-
-            # Generar las llaves maestras de los factores
-            # TODO: DEPURACION
-            print("generar llaves maestras")
 
             # Obtener los mapas de valores de los factores
             mapas_valores_1 = factor1.get_valores()
@@ -356,10 +311,6 @@ def main():
                     llave_busqueda_2 += elem
                 llave_busqueda_2 += "$"
 
-                # TODO: DEPURACION
-                print(llave_busqueda_1)
-                print(llave_busqueda_2)
-
                 # Quedarse solo con las que cumplan la condicion
                 llaves_1 = []
                 for llave in factor1_keys:
@@ -371,10 +322,6 @@ def main():
                     value = re.search(llave_busqueda_2, llave)
                     if value:
                         llaves_2.append(value.string)
-
-                # TODO: DEPURACION
-                print(llaves_1)
-                print(llaves_2)
 
                 # Combinar los valores de los factores
                 for clave in llaves_1:
@@ -392,11 +339,6 @@ def main():
 
             #Actualizar la lista con el nuevo factor
             factores_reducibles.append(facto(nuevo_factor_lista_variables, mapa_nuevo_factor))
-            # TODO: DEPURACION
-            print("-----")
-            print("bye")
-            print(nuevo_factor_lista_variables)
-            print(mapa_nuevo_factor)
 
         #Obtener el factor a marginalizar (solo deberia quedar 1)
         factor_marginalizar = factores_reducibles[0]
@@ -408,18 +350,11 @@ def main():
         #Si no hay variables a marginalizar, continuar (queda como 1, no afecta en los productos)
         if len(variables_marginalizar) == 0:
             continue
-        
-        # TODO: DEPURACION
-        print("/////")
-        print(variables_marginalizar)
 
         # Generar la llave maestra de marginalizacion
         llave_maestra_marginalizar = "^".join(["." for i in range(len(factor_marginalizar.get_variables()))]) + "$"
         valores_actuales_marginalizar = [0 for i in range(len(factor_marginalizar.get_variables()))]
         mapa_marginalizado = {}
-
-        # TODO: DEPURACION
-        print(factor_marginalizar)
 
         # Marginalizar la variable del factor
         while True:
@@ -442,10 +377,6 @@ def main():
             for elem in lista_llave:
                 llave_trabajo += elem
             llave_trabajo += "$"	
-
-            # TODO: DEPURACION
-            print(len(factor_marginalizar.get_variables()))
-            print(llave_trabajo)
             
             # Marginalizacion de la variable
             llaves = []
@@ -466,23 +397,7 @@ def main():
 
             
         # Actualizar la lista con el nuevo factor marginalizado
-        print(mapa_marginalizado)
-        print(variables_marginalizar)
-        guardar_factor(mapa_marginalizado, variables_marginalizar)
-
-            
-
-    # TODO: DEPURACION
-    print("=======")
-    print(lista_factores)
-    for factor in lista_factores:
-        print(factor.get_variables())
-        print(factor.get_valores())
-        print("///////////")
-        for var in factor.get_variables():
-            print(var.get_nombre())
-            print(var.get_valores())
-        
+        guardar_factor(mapa_marginalizado, variables_marginalizar)        
 
 
     # Escribir de manera elegante la respuesta
