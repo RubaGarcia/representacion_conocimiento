@@ -7,7 +7,7 @@ import sys
 
 
 def generar_letras_no_repetidas(num):
-    letras = "abcdefghiJKLMNOpqrstuvwxyzÁÉÍÓÚáéíóúÜüÇçßàèìòùãõñĀāĒēĪīŌōŪū¿¡!@#$%^&*()-_=+[]<>?/"
+    letras = "abcdefghiJKLMNOpqrstuvwxyzÁÉÍÓÚáéíóúÜüÇçßàèìòùãõñĀāĒēĪīŌōŪū¿¡_!@#$%^&*-=+<>?/"
     letras=letras.lower()
     letras_no_repetidas = random.sample(letras, min(num, len(letras)))
     return letras_no_repetidas
