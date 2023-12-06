@@ -1,4 +1,6 @@
 import re
+import sys
+import time
 
 class reader:
     def __init__(self, file):
@@ -65,8 +67,11 @@ class variable:
 
         
 
-def main():
-    lector = reader("base_tablas.txt")
+def main(base):
+    lectura = "base_tablas_"+ str(base) + ".txt"
+    #print (lectura)
+    lector = reader(lectura)
+    #lector = reader("base_tablas_0.txt")
     lista_variables = []
     lista_factores = []
     lista_constantes = []
@@ -418,9 +423,17 @@ def main():
     for constante in lista_constantes:
         texto += " * " + str(constante)
 
-    print(texto)
+    #print(texto)
 
     
 
 if __name__ == "__main__":
-    main()
+    start_time = time.time()
+    if len(sys.argv) >= 2:
+        #print(sys.argv[1])
+        main(sys.argv[1])
+        print((time.time() - start_time))
+    else:
+        print("no hay entrada")
+
+    
