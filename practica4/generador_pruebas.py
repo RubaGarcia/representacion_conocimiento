@@ -10,6 +10,7 @@ alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i',
 VALORES_VARIABLES = 2
 
 def main(num_variables):
+    print (str(num_variables))
     variables = []
     valores = [0 for i in range (int(num_variables))]
 
@@ -24,7 +25,9 @@ def main(num_variables):
 
     random.shuffle(variables)
 
-    archivo = open("base_datos_" + str(num_variables) + ".txt", "w")
+    temporal = "tiempos"
+
+    archivo = open("base_datos_" + temporal + ".txt", "w")
     primera_linea = variables[0] + str(VALORES_VARIABLES)
     for elem in variables[1:]:
         primera_linea += "," + elem + str(VALORES_VARIABLES)
