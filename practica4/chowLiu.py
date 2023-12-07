@@ -54,13 +54,11 @@ def crear_grafo(data):
 
 
 def main():
-    lector = reader('base_datos_20.txt')
+    lector = reader('base_datos_13.txt')
     data = lector.get_data()
     longitud = len(data[1:])
 
     variables_text = data[0].split(',')
-
-    print(variables_text)
 
     variables = []
     for var in variables_text:
@@ -79,7 +77,6 @@ def main():
         info_linea = linea.split(',')
 
         for i in range(len(info_linea)):
-            #clave = ""
             for j in range(i, len(info_linea)):
                 if j == i:
                     clave = info_linea[i]
@@ -90,9 +87,6 @@ def main():
                     diccionario[clave] += 1
                 else:
                     diccionario[clave] = 1
-                #print(clave)
-
-    print(diccionario)
 
     #busco parejas de variables
     clave_maestra = "^[a-zA-z]+0[a-zA-Z]+0$"
@@ -110,17 +104,11 @@ def main():
                     string += lista_llave[i].upper()
                 else:
                     string += "|"
-            #string = lista_llave[0].upper() + "|" + lista_llave[2].upper()
             parejas.append(string)
-
-    print(parejas)
             
 
     #Calculo la informacion mutua de cada pareja de variables
-
     for pareja in parejas:
-        #elem1 = pareja[0].lower()
-        #elem2 = pareja[1].lower()
         elementos = pareja.split('|')
         elem1 = elementos[0].lower()
         elem2 = elementos[1].lower()
@@ -142,26 +130,12 @@ def main():
     #ordenamos los pesos de mayor a menor
 
     pesos_ordenados = sorted(pesos.items(), reverse=False)
-    print("--------------------")
-    print (pesos_ordenados)
-    print("--------------------")
         
-
-    #Construimos el arbol de recubrimiento con los pesos maximos
-    #aristas_escogidas = pesos_ordenados[:len(variables)-1]
-    #print(aristas_escogidas)
 
     #Grafo de recubrimiento
     G = nx.Graph()
     for var in variables:
         G.add_node(var.get_nombre())
-    #print_graph(G)
-    '''
-    for arista in aristas_escogidas:
-        nodos = arista[0].split('|')
-        G.add_edge(nodos[0], nodos[1])
-    print_graph(G)
-    '''
 
     #Creamos el arbol de pesos minimos
     nodos_visitados = []
